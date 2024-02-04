@@ -1,0 +1,45 @@
+enum TransactionType {
+  Deposit
+  Withdrawal
+  ClaimRewards
+}
+
+type TransactionSummary @entity {
+  id: ID!
+  depositGasUsed: BigInt!
+  depositTxCost: BigInt!
+  withdrawalGasUsed: BigInt!
+  withdrawalTxCost: BigInt!
+  claimedRewardsGasUsed: BigInt!
+  claimedRewardsTxCost: BigInt!
+  blockTimestamp: BigInt!
+  blockNumber: BigInt!
+}
+
+type User @entity {
+  id: ID!
+  transactions: [Transaction!]! @derivedFrom(field: "user")
+}
+
+type Transaction @entity {
+  id: ID!
+  user: User!
+  transactionType: TransactionType!
+  gasPrice: BigInt!
+  gasUsed: BigInt!
+  gasLimit: BigInt!
+  txCost: BigInt!
+  blockTimestamp: BigInt!
+  blockNumber: BigInt!
+}
+
+type Withdraw @entity(immutable: true) {
+  id: Bytes!
+  _token: Bytes! # address
+  _amount: BigInt! # uint256
+  _user: Bytes! # address
+  _withdrawnWant: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
